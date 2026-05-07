@@ -339,6 +339,10 @@ mem_to_bytes(q) = n {
 	n := to_number(trim_suffix(s, "Ei")) * 1152921504606846976
 } else = n {
 	s := sprintf("%v", [q])
+	endswith(s, "m")
+	n := to_number(trim_suffix(s, "m")) / 1000
+} else = n {
+	s := sprintf("%v", [q])
 	endswith(s, "k")
 	n := to_number(trim_suffix(s, "k")) * 1000
 } else = n {
