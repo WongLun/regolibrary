@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: initcontainer-key-pod
+  labels:
+    app: initcontainer-key-pod
+spec:
+  initContainers:
+  - name: init-creds
+    image: busybox:1.36.1
+    env:
+    - name: random
+      value: "hello"
+    - name: azure_batch_key
+      value: "my-secret-value"
+  containers:
+  - name: main
+    image: nginx:1.25

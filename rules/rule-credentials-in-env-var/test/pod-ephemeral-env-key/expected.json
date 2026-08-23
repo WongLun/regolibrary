@@ -1,0 +1,32 @@
+[
+    {
+        "alertMessage": "Pod: ephemeral-key-pod has sensitive information in ephemeralContainer environment variables",
+        "deletePaths": [
+            "spec.ephemeralContainers[0].env[1].name",
+            "spec.ephemeralContainers[0].env[1].value"
+        ],
+        "failedPaths": [
+            "spec.ephemeralContainers[0].env[1].name",
+            "spec.ephemeralContainers[0].env[1].value"
+        ],
+        "fixPaths": [],
+        "ruleStatus": "",
+        "packagename": "armo_builtins",
+        "alertObject": {
+            "k8sApiObjects": [
+                {
+                    "apiVersion": "v1",
+                    "kind": "Pod",
+                    "metadata": {
+                        "labels": {
+                            "app": "ephemeral-key-pod"
+                        },
+                        "name": "ephemeral-key-pod"
+                    }
+                }
+            ]
+        },
+        "alertScore": 9,
+        "packagename": "armo_builtins"
+    }
+]
