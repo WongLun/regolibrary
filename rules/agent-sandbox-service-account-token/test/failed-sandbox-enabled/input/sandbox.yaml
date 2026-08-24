@@ -1,0 +1,11 @@
+apiVersion: agents.x-k8s.io/v1beta1
+kind: Sandbox
+metadata:
+  name: direct-enabled-token
+spec:
+  podTemplate:
+    spec:
+      automountServiceAccountToken: true
+      containers:
+      - name: runtime
+        image: python:3.11

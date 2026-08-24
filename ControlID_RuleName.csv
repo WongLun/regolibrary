@@ -235,3 +235,4 @@ C-0303,resources-sandbox-memory-limits
 C-0304,agent-sandbox-image-registry-allowlist
 C-0304,agent-sandbox-image-tag-provenance
 C-0307,non-existent-service-account
+C-0309,agent-sandbox-service-account-token
