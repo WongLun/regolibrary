@@ -1,0 +1,10 @@
+apiVersion: agents.x-k8s.io/v1beta1
+kind: Sandbox
+metadata:
+  name: direct-missing-token
+spec:
+  podTemplate:
+    spec:
+      containers:
+      - name: runtime
+        image: python:3.11
