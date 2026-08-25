@@ -1,0 +1,12 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: my-ns-partial-allowlist
+spec:
+  endpointSelector:
+    matchLabels:
+      io.kubernetes.pod.namespace: my-ns
+      app: special-app-only
+  ingress:
+  - fromEndpoints:
+    - matchLabels: {}

@@ -1,0 +1,12 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: my-ns-egress-allowlist
+spec:
+  endpointSelector:
+    matchLabels:
+      io.kubernetes.pod.namespace: my-ns
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: kube-system
