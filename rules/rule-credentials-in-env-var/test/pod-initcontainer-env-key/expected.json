@@ -1,0 +1,31 @@
+[
+    {
+        "alertMessage": "Pod: initcontainer-key-pod has sensitive information in initContainer environment variables",
+        "deletePaths": [
+            "spec.initContainers[0].env[1].name",
+            "spec.initContainers[0].env[1].value"
+        ],
+        "failedPaths": [
+            "spec.initContainers[0].env[1].name",
+            "spec.initContainers[0].env[1].value"
+        ],
+        "fixPaths": [],
+        "ruleStatus": "",
+        "packagename": "armo_builtins",
+        "alertScore": 9,
+        "alertObject": {
+            "k8sApiObjects": [
+                {
+                    "apiVersion": "v1",
+                    "kind": "Pod",
+                    "metadata": {
+                        "labels": {
+                            "app": "initcontainer-key-pod"
+                        },
+                        "name": "initcontainer-key-pod"
+                    }
+                }
+            ]
+        }
+    }
+]

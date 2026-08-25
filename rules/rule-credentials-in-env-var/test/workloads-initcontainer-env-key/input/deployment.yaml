@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: initcontainer-key-deploy
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      initContainers:
+      - name: init-creds
+        image: busybox:1.36.1
+        env:
+        - name: random
+          value: "hello"
+        - name: azure_batch_key
+          value: "my-secret-value"
+      containers:
+      - name: main
+        image: nginx:1.25

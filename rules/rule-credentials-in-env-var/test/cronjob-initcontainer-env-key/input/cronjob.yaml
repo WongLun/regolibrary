@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: initcontainer-key-cronjob
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          initContainers:
+          - name: init-creds
+            image: busybox:1.36.1
+            env:
+            - name: random
+              value: "hello"
+            - name: azure_batch_key
+              value: "my-secret-value"
+          containers:
+          - name: main
+            image: nginx:1.25
+          restartPolicy: OnFailure
