@@ -1,0 +1,22 @@
+[
+  {
+    "alertMessage": "other-pod: no networkpolicy configured in labels",
+    "packagename": "armo_builtins",
+    "failedPaths": [],
+    "fixPaths": [],
+    "alertObject": {
+      "k8sApiObjects": [
+        {
+          "apiVersion": "v1",
+          "kind": "Pod",
+          "metadata": {
+            "name": "other-pod",
+            "labels": {
+              "app": "other-pod"
+            }
+          }
+        }
+      ]
+    }
+  }
+]
