@@ -296,3 +296,4 @@ AllControls,C-0303,Agent Sandbox resource ceilings
 AllControls,C-0304,Agent Sandbox image provenance
 AllControls,C-0307,Non-existent service account
 DevOpsBest,C-0307,Non-existent service account
+AllControls,C-0309,Agent Sandbox service account token isolation

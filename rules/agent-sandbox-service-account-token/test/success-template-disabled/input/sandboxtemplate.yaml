@@ -1,0 +1,11 @@
+apiVersion: extensions.agents.x-k8s.io/v1beta1
+kind: SandboxTemplate
+metadata:
+  name: template-disabled-token
+spec:
+  podTemplate:
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: runtime
+        image: python:3.11

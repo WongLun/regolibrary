@@ -1699,6 +1699,12 @@
             "patch": {
                 "name": "Minimize user access to GCP Artifact Registry"
             }
+        },
+        {
+            "controlID": "C-0309",
+            "patch": {
+                "name": "Agent Sandbox service account token isolation"
+            }
         }
     ]
 }

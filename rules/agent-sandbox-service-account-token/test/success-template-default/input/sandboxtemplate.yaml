@@ -1,0 +1,10 @@
+apiVersion: extensions.agents.x-k8s.io/v1beta1
+kind: SandboxTemplate
+metadata:
+  name: template-secure-default
+spec:
+  podTemplate:
+    spec:
+      containers:
+      - name: runtime
+        image: python:3.11
