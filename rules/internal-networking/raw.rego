@@ -20,6 +20,10 @@ deny contains msga if {
 	qualifying_ccnps := [policy | policy = input[_]; is_ccnp_cluster_wide_coverage(policy)]
 	count(qualifying_ccnps) == 0
 
+	# Collect clusterwide policies scoped to exactly this namespace
+	namespace_scoped_ccnps := [policy | policy = input[_]; is_ccnp_namespace_coverage(policy, namespace.metadata.name)]
+	count(namespace_scoped_ccnps) == 0
+
 	msga := {
 		"alertMessage": sprintf("no policy is defined for namespace %v", [namespace.metadata.name]),
 		"alertScore": 9,
@@ -65,6 +69,32 @@ is_ccnp_cluster_wide_coverage(policy) if {
 # (and tolerates an empty `matchExpressions: []`).
 ccnp_spec_selects_all_endpoints(spec) if {
 	count(object.get(spec.endpointSelector, "matchLabels", {})) == 0
+	count(object.get(spec.endpointSelector, "matchExpressions", [])) == 0
+}
+
+# A CCNP scoped to one namespace via Cilium's reserved identity label
+# io.kubernetes.pod.namespace (plain or k8s:-prefixed, resolved from the pod's
+# namespace, never present in pod.metadata.labels) protects that namespace,
+# under the same conditions as cluster-wide coverage.
+is_ccnp_namespace_coverage(policy, namespace_name) if {
+	policy.kind == "CiliumClusterwideNetworkPolicy"
+	spec := cilium_policy_specs(policy)[_]
+	ccnp_spec_selects_namespace(spec, namespace_name)
+	not ccnp_spec_default_deny_disabled(spec)
+	ccnp_spec_has_ingress_or_egress(spec)
+}
+
+# matchLabels is conjunctive: every alias present must name the same namespace,
+# and any further requirement narrows the policy to a subset of the namespace
+# rather than covering it.
+ccnp_spec_selects_namespace(spec, namespace_name) if {
+	alias_keys := {"io.kubernetes.pod.namespace", "k8s:io.kubernetes.pod.namespace"}
+	labels := object.get(spec.endpointSelector, "matchLabels", {})
+	aliases := {value | some key in alias_keys; value := labels[key]}
+	aliases == {namespace_name}
+	every key, _ in labels {
+		key in alias_keys
+	}
 	count(object.get(spec.endpointSelector, "matchExpressions", [])) == 0
 }
 

@@ -1,0 +1,28 @@
+[
+    {
+        "alertMessage": "Deployment: initcontainer-key-deploy has sensitive information in initContainer environment variables",
+        "deletePaths": [
+            "spec.template.spec.initContainers[0].env[1].name",
+            "spec.template.spec.initContainers[0].env[1].value"
+        ],
+        "failedPaths": [
+            "spec.template.spec.initContainers[0].env[1].name",
+            "spec.template.spec.initContainers[0].env[1].value"
+        ],
+        "fixPaths": [],
+        "ruleStatus": "",
+        "packagename": "armo_builtins",
+        "alertScore": 9,
+        "alertObject": {
+            "k8sApiObjects": [
+                {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "name": "initcontainer-key-deploy"
+                    }
+                }
+            ]
+        }
+    }
+]

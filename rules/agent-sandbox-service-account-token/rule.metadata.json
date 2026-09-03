@@ -1,1 +1,36 @@
-{"name":"agent-sandbox-service-account-token","attributes":{},"ruleLanguage":"Rego","match":[{"apiGroups":["agents.x-k8s.io"],"apiVersions":["v1alpha1","v1beta1"],"resources":["Sandbox"]},{"apiGroups":["extensions.agents.x-k8s.io"],"apiVersions":["v1alpha1","v1beta1"],"resources":["SandboxTemplate"]}],"ruleDependencies":[],"description":"requires explicit service account token automount disablement","remediation":"Set spec.podTemplate.spec.automountServiceAccountToken to false.","ruleQuery":"armo_builtins"}
+{
+  "name": "agent-sandbox-service-account-token",
+  "attributes": {
+    "hostSensorRule": "false",
+    "imageScanRelated": false
+  },
+  "ruleLanguage": "Rego",
+  "match": [
+    {
+      "apiGroups": [
+        "agents.x-k8s.io"
+      ],
+      "apiVersions": [
+        "v1beta1"
+      ],
+      "resources": [
+        "Sandbox"
+      ]
+    },
+    {
+      "apiGroups": [
+        "extensions.agents.x-k8s.io"
+      ],
+      "apiVersions": [
+        "v1beta1"
+      ],
+      "resources": [
+        "SandboxTemplate"
+      ]
+    }
+  ],
+  "ruleDependencies": [],
+  "description": "Checks that Agent Sandbox workloads do not opt in to Kubernetes service account token automounting.",
+  "remediation": "Set spec.podTemplate.spec.automountServiceAccountToken to false on direct Sandbox resources. For SandboxTemplate resources, either omit the field to retain its secure default or set it to false explicitly.",
+  "ruleQuery": "armo_builtins"
+}

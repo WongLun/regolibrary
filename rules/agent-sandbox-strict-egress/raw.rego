@@ -4,8 +4,8 @@ package armo_builtins
 import rego.v1
 
 deny contains msg if {
-	wl := input[_]
 	"strict" in object.get(data.postureControlInputs, "agentSandboxEgressMode", ["managed"])
+	wl := input[_]
 	not agent_sandbox_has_strict_egress(wl)
 	msg := {"alertMessage": "Strict mode requires an explicit managed default-deny egress policy; the managed default still permits public internet", "packagename": "armo_builtins", "failedPaths": ["spec.networkPolicy"], "fixPaths": [], "alertScore": 8, "alertObject": {"k8sApiObjects": [wl]}}
 }

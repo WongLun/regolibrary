@@ -6,7 +6,8 @@
   "dynamicMatch": [
     {
       "apiGroups": [
-        "eks.amazonaws.com"
+        "eks.amazonaws.com",
+        "container.googleapis.com"
       ],
       "apiVersions": [
         "v1"
@@ -16,7 +17,7 @@
       ]
     }
   ],
-  "relevantCloudProviders": ["EKS"],
+  "relevantCloudProviders": ["EKS", "GKE"],
   "ruleDependencies": [],
   "description": "",
   "remediation": "",

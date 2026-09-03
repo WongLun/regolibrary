@@ -4,9 +4,9 @@ package armo_builtins
 import rego.v1
 
 deny contains msg if {
-	wl := input[_]
 	allowed := object.get(data.postureControlInputs, "agentRuntimeClassAllowList", [])
 	count(allowed) > 0
+	wl := input[_]
 	runtime_class := object.get(object.get(object.get(wl.spec, "podTemplate", {}), "spec", {}), "runtimeClassName", "")
 	not runtime_class in allowed
 	msg := agent_runtime_message(wl, "spec.podTemplate.spec.runtimeClassName", sprintf("%v must select an approved sandbox RuntimeClass", [wl.kind]), 9)

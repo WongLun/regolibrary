@@ -4,9 +4,9 @@ package armo_builtins
 import rego.v1
 
 deny contains msg if {
-	wl := input[_]
 	allowed := object.get(data.postureControlInputs, "imageRepositoryAllowList", [])
 	count(allowed) > 0
+	wl := input[_]
 	ref := agent_registry_image_refs(wl)[_]
 	not agent_registry_allowed(ref.image, allowed)
 	msg := agent_registry_message(wl, ref.path)

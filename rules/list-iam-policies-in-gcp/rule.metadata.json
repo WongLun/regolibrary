@@ -1,0 +1,25 @@
+{
+  "name": "list-iam-policies-in-gcp",
+  "attributes": {},
+  "ruleLanguage": "Rego",
+  "dynamicMatch": [
+    {
+      "apiGroups": [
+        "container.googleapis.com"
+      ],
+      "apiVersions": [
+        "v1"
+      ],
+      "resources": [
+        "ListEntitiesForPolicies"
+      ]
+    }
+  ],
+  "relevantCloudProviders": [
+    "GKE"
+  ],
+  "ruleDependencies": [],
+  "description": "",
+  "remediation": "",
+  "ruleQuery": "armo_builtins"
+}

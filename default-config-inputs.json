@@ -8,11 +8,12 @@
     },
     "settings": {
         "postureControlInputs": {
-            "imageRepositoryAllowList": [
-            ],
+            "imageRepositoryAllowList": [],
             "agentRuntimeClassAllowList": ["gvisor", "kata"],
             "agentSandboxEgressMode": ["managed"],
             "agentSnapshotLocationAllowList": [],
+            "imageDigestExemptRepositories": [],
+            "floatingImageTags": [],
             "trustedCosignPublicKeys": [],
             "insecureCapabilities": [
                 "SETPCAP",
@@ -71,7 +72,11 @@
                 "JWT",
                 "Bearer",
                 "_key_",
-                "_secret_"
+                "_secret_",
+                "AKIA[0-9A-Z]{16}",
+                "ghp_[0-9A-Za-z]{36}",
+                "AIza[0-9A-Za-z\\-_]{35}",
+                "xox[baprs]-[0-9A-Za-z]{10,48}"
             ],
             "sensitiveKeyNamesAllowed": [],
             "sensitiveValuesAllowed": [],
@@ -93,6 +98,8 @@
             "cpu_request_min": ["0"],
             "cpu_limit_max": [],
             "cpu_limit_min": ["0"],
+            "sandbox_cpu_limit_max": [],
+            "sandbox_memory_limit_max": [],
             "wlKnownNames": [
                 "coredns",
                 "kube-proxy",
@@ -113,7 +120,8 @@
                 "clair-clair"
             ],
             "recommendedLabels": ["app", "tier", "phase", "version", "owner", "env"],
-            "k8sRecommendedLabels": ["app.kubernetes.io/name", "app.kubernetes.io/instance", "app.kubernetes.io/version", "app.kubernetes.io/component", "app.kubernetes.io/part-of", "app.kubernetes.io/managed-by", "app.kubernetes.io/created-by"]
+            "k8sRecommendedLabels": ["app.kubernetes.io/name", "app.kubernetes.io/instance", "app.kubernetes.io/version", "app.kubernetes.io/component", "app.kubernetes.io/part-of", "app.kubernetes.io/managed-by", "app.kubernetes.io/created-by"],
+            "hardenedSandboxRuntimeClasses": ["gvisor"]
         }
     }
 }

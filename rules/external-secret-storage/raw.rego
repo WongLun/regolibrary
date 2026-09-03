@@ -20,13 +20,16 @@ deny contains msg if {
 		{"path": sprintf("resources[%d].providers[%d].kms", [count(resources), 0]), "value": "YOUR_EXTERNAL_KMS"},
 	]
 
-	# Add name to the failed object so that
-	# it fit the format of the alert object
-	failed_obj := json.patch(config_file_content, [{
-		"op": "add",
-		"path": "name",
-		"value": "encryption-provider-config",
-	}])
+	# Add name and the originating host-sensor object's identity to the failed
+	# object, so the backend can resolve it to a resource (same envelope shape
+	# used by other host-sensor/externalObjects rules), and so it fits the
+	# format of the alert object
+	failed_obj := json.patch(config_file_content, [
+		{"op": "add", "path": "name", "value": "encryption-provider-config"},
+		{"op": "add", "path": "apiVersion", "value": obj.apiVersion},
+		{"op": "add", "path": "kind", "value": obj.kind},
+		{"op": "add", "path": "metadata", "value": obj.metadata},
+	])
 
 	msg := {
 		"alertMessage": "Encryption provider config is not using a recommended provider for KMS",

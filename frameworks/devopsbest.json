@@ -5,9 +5,14 @@
         "builtin": true
     },
     "scanningScope": {
-        "matches": ["cluster", "file"]
+        "matches": [
+            "cluster",
+            "file"
+        ]
     },
-    "typeTags": ["compliance"],
+    "typeTags": [
+        "compliance"
+    ],
     "activeControls": [
         {
             "controlID": "C-0018",
@@ -121,6 +126,42 @@
             "controlID": "C-0296",
             "patch": {
                 "name": "Mismatching selector"
+            }
+        },
+        {
+            "controlID": "C-0298",
+            "patch": {
+                "name": "Dangling Ingress backend"
+            }
+        },
+        {
+            "controlID": "C-0299",
+            "patch": {
+                "name": "Dangling NetworkPolicy"
+            }
+        },
+        {
+            "controlID": "C-0300",
+            "patch": {
+                "name": "Dangling HPA target"
+            }
+        },
+        {
+            "controlID": "C-0302",
+            "patch": {
+                "name": "Dangling Gateway API backend"
+            }
+        },
+        {
+            "controlID": "C-0305",
+            "patch": {
+                "name": "No rolling update strategy"
+            }
+        },
+        {
+            "controlID": "C-0307",
+            "patch": {
+                "name": "Non-existent service account"
             }
         }
     ]

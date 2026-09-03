@@ -4,18 +4,18 @@ package armo_builtins
 import rego.v1
 
 deny contains msg if {
-	wl := input[_]
 	maxima := object.get(data.postureControlInputs, "cpu_limit_max", [])
 	count(maxima) > 0
+	wl := input[_]
 	limit := object.get(object.get(object.get(object.get(wl.spec, "template", {}), "resources", {}), "limits", {}), "cpu", "")
 	worker_cpu_limit_invalid(limit, maxima[0])
 	msg := worker_ceiling_message(wl, "spec.template.resources.limits.cpu", "CPU")
 }
 
 deny contains msg if {
-	wl := input[_]
 	maxima := object.get(data.postureControlInputs, "memory_limit_max", [])
 	count(maxima) > 0
+	wl := input[_]
 	limit := object.get(object.get(object.get(object.get(wl.spec, "template", {}), "resources", {}), "limits", {}), "memory", "")
 	worker_memory_limit_invalid(limit, maxima[0])
 	msg := worker_ceiling_message(wl, "spec.template.resources.limits.memory", "memory")
@@ -24,14 +24,14 @@ deny contains msg if {
 worker_cpu_millicores(quantity) := to_number(trim_suffix(quantity, "m")) if endswith(quantity, "m")
 worker_cpu_millicores(quantity) := to_number(quantity) * 1000 if not endswith(quantity, "m")
 
-worker_cpu_limit_invalid(limit, _) if limit == ""
+worker_cpu_limit_invalid("", _)
 
 worker_cpu_limit_invalid(limit, maximum) if {
 	limit != ""
 	worker_cpu_millicores(limit) > worker_cpu_millicores(maximum)
 }
 
-worker_memory_limit_invalid(limit, _) if limit == ""
+worker_memory_limit_invalid("", _)
 
 worker_memory_limit_invalid(limit, maximum) if {
 	limit != ""

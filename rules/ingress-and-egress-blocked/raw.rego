@@ -162,6 +162,17 @@ is_same_namespace(metadata1, metadata2) if {
 
 # --- Cilium endpointSelector match (shared across pod/workload/cronjob) ---
 
+# Cilium matches an endpointSelector against endpoint identity labels, which
+# include the reserved key io.kubernetes.pod.namespace (derived from the pod's
+# namespace, never present in pod.metadata.labels). Add both its key forms.
+cilium_identity_labels(namespaced_metadata, template_metadata) := labels if {
+	namespace := object.get(namespaced_metadata, "namespace", "default")
+	labels := object.union(object.get(template_metadata, "labels", {}), {
+		"io.kubernetes.pod.namespace": namespace,
+		"k8s:io.kubernetes.pod.namespace": namespace,
+	})
+}
+
 # matchLabels with keys: every key on the selector must equal the corresponding label.
 cilium_endpoint_selector_matches(spec, labels) if {
 	count(spec.endpointSelector.matchLabels) > 0
@@ -198,14 +209,14 @@ pod_connected_to_network_policy(pod, networkpolicie) if {
 	networkpolicie.kind == "CiliumNetworkPolicy"
 	is_same_namespace(networkpolicie.metadata, pod.metadata)
 	spec := cilium_policy_specs(networkpolicie)[_]
-	cilium_endpoint_selector_matches(spec, object.get(pod.metadata, "labels", {}))
+	cilium_endpoint_selector_matches(spec, cilium_identity_labels(pod.metadata, pod.metadata))
 }
 
 # CiliumClusterwideNetworkPolicy: same, no namespace check
 pod_connected_to_network_policy(pod, networkpolicie) if {
 	networkpolicie.kind == "CiliumClusterwideNetworkPolicy"
 	spec := cilium_policy_specs(networkpolicie)[_]
-	cilium_endpoint_selector_matches(spec, object.get(pod.metadata, "labels", {}))
+	cilium_endpoint_selector_matches(spec, cilium_identity_labels(pod.metadata, pod.metadata))
 }
 
 # --- Workload connection checks ---
@@ -230,14 +241,14 @@ wlConnectedToNetworkPolicy(wl, networkpolicie) if {
 	networkpolicie.kind == "CiliumNetworkPolicy"
 	is_same_namespace(wl.metadata, networkpolicie.metadata)
 	spec := cilium_policy_specs(networkpolicie)[_]
-	cilium_endpoint_selector_matches(spec, object.get(wl.spec.template.metadata, "labels", {}))
+	cilium_endpoint_selector_matches(spec, cilium_identity_labels(wl.metadata, wl.spec.template.metadata))
 }
 
 # CiliumClusterwideNetworkPolicy
 wlConnectedToNetworkPolicy(wl, networkpolicie) if {
 	networkpolicie.kind == "CiliumClusterwideNetworkPolicy"
 	spec := cilium_policy_specs(networkpolicie)[_]
-	cilium_endpoint_selector_matches(spec, object.get(wl.spec.template.metadata, "labels", {}))
+	cilium_endpoint_selector_matches(spec, cilium_identity_labels(wl.metadata, wl.spec.template.metadata))
 }
 
 # --- CronJob connection checks ---
@@ -262,14 +273,14 @@ cronjob_connected_to_network_policy(cj, networkpolicie) if {
 	networkpolicie.kind == "CiliumNetworkPolicy"
 	is_same_namespace(cj.metadata, networkpolicie.metadata)
 	spec := cilium_policy_specs(networkpolicie)[_]
-	cilium_endpoint_selector_matches(spec, object.get(cj.spec.jobTemplate.spec.template.metadata, "labels", {}))
+	cilium_endpoint_selector_matches(spec, cilium_identity_labels(cj.metadata, cj.spec.jobTemplate.spec.template.metadata))
 }
 
 # CiliumClusterwideNetworkPolicy
 cronjob_connected_to_network_policy(cj, networkpolicie) if {
 	networkpolicie.kind == "CiliumClusterwideNetworkPolicy"
 	spec := cilium_policy_specs(networkpolicie)[_]
-	cilium_endpoint_selector_matches(spec, object.get(cj.spec.jobTemplate.spec.template.metadata, "labels", {}))
+	cilium_endpoint_selector_matches(spec, cilium_identity_labels(cj.metadata, cj.spec.jobTemplate.spec.template.metadata))
 }
 
 # --- Ingress/Egress policy checks ---

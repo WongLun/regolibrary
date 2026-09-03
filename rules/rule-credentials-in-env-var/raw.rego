@@ -4,7 +4,7 @@ package armo_builtins
 import rego.v1
 
 deny contains msga if {
-	sensitive_key_names := data.postureControlInputs.sensitiveKeyName
+	sensitive_key_names := data.postureControlInputs.sensitiveKeyNames
 	pod := input[_]
 	pod.kind == "Pod"
 
@@ -20,7 +20,6 @@ deny contains msga if {
 	not is_allowed_value(env.value)
 	not is_allowed_key_name(env.name)
 
-	is_not_reference(env)
 	is_not_file_path(env.value)
 
 	paths := [
@@ -57,7 +56,6 @@ deny contains msga if {
 	not is_allowed_value(env.value)
 	not is_allowed_key_name(env.name)
 
-	is_not_reference(env)
 	is_not_file_path(env.value)
 
 	paths := [
@@ -93,7 +91,6 @@ deny contains msga if {
 	not is_allowed_value(env.value)
 	not is_allowed_key_name(env.name)
 
-	is_not_reference(env)
 	is_not_file_path(env.value)
 
 	paths := [
@@ -123,13 +120,12 @@ deny contains msga if {
 	container := pod.spec.containers[i]
 	env := container.env[j]
 
-	contains(lower(env.value), lower(value))
+	regex.match(sprintf("(?i)%s", [value]), env.value)
 
 	# check that value or key weren't allowed by user
 	not is_allowed_value(env.value)
 	not is_allowed_key_name(env.name)
 
-	is_not_reference(env)
 	is_not_file_path(env.value)
 
 	paths := [
@@ -159,13 +155,12 @@ deny contains msga if {
 	container := wl.spec.template.spec.containers[i]
 	env := container.env[j]
 
-	contains(lower(env.value), lower(value))
+	regex.match(sprintf("(?i)%s", [value]), env.value)
 
 	# check that value or key weren't allowed by user
 	not is_allowed_value(env.value)
 	not is_allowed_key_name(env.name)
 
-	is_not_reference(env)
 	is_not_file_path(env.value)
 
 	paths := [
@@ -194,13 +189,12 @@ deny contains msga if {
 	container := wl.spec.jobTemplate.spec.template.spec.containers[i]
 	env := container.env[j]
 
-	contains(lower(env.value), lower(value))
+	regex.match(sprintf("(?i)%s", [value]), env.value)
 
 	# check that value or key weren't allowed by user
 	not is_allowed_value(env.value)
 	not is_allowed_key_name(env.name)
 
-	is_not_reference(env)
 	is_not_file_path(env.value)
 
 	paths := [
@@ -219,9 +213,113 @@ deny contains msga if {
 	}
 }
 
-is_not_reference(env) if {
-	not env.valueFrom.secretKeyRef
-	not env.valueFrom.configMapKeyRef
+deny contains msga if {
+	sensitive_key_names := data.postureControlInputs.sensitiveKeyNames
+	pod := input[_]
+	pod.kind == "Pod"
+	key_name := sensitive_key_names[_]
+	container := pod.spec.initContainers[i]
+	env := container.env[j]
+	contains(lower(env.name), lower(key_name))
+	env.value != ""
+	not is_allowed_value(env.value)
+	not is_allowed_key_name(env.name)
+	is_not_file_path(env.value)
+	paths := [
+		sprintf("spec.initContainers[%v].env[%v].name", [i, j]),
+		sprintf("spec.initContainers[%v].env[%v].value", [i, j]),
+	]
+	msga := {
+		"alertMessage": sprintf("Pod: %v has sensitive information in initContainer environment variables", [pod.metadata.name]),
+		"alertScore": 9,
+		"fixPaths": [],
+		"deletePaths": paths,
+		"failedPaths": paths,
+		"packagename": "armo_builtins",
+		"alertObject": {"k8sApiObjects": [pod]},
+	}
+}
+
+deny contains msga if {
+	sensitive_key_names := data.postureControlInputs.sensitiveKeyNames
+	pod := input[_]
+	pod.kind == "Pod"
+	key_name := sensitive_key_names[_]
+	container := pod.spec.ephemeralContainers[i]
+	env := container.env[j]
+	contains(lower(env.name), lower(key_name))
+	env.value != ""
+	not is_allowed_value(env.value)
+	not is_allowed_key_name(env.name)
+	is_not_file_path(env.value)
+	paths := [
+		sprintf("spec.ephemeralContainers[%v].env[%v].name", [i, j]),
+		sprintf("spec.ephemeralContainers[%v].env[%v].value", [i, j]),
+	]
+	msga := {
+		"alertMessage": sprintf("Pod: %v has sensitive information in ephemeralContainer environment variables", [pod.metadata.name]),
+		"alertScore": 9,
+		"fixPaths": [],
+		"deletePaths": paths,
+		"failedPaths": paths,
+		"packagename": "armo_builtins",
+		"alertObject": {"k8sApiObjects": [pod]},
+	}
+}
+
+deny contains msga if {
+	spec_template_spec_patterns := {"Deployment", "ReplicaSet", "DaemonSet", "StatefulSet", "Job"}
+	sensitive_key_names := data.postureControlInputs.sensitiveKeyNames
+	wl := input[_]
+	spec_template_spec_patterns[wl.kind]
+	key_name := sensitive_key_names[_]
+	container := wl.spec.template.spec.initContainers[i]
+	env := container.env[j]
+	contains(lower(env.name), lower(key_name))
+	env.value != ""
+	not is_allowed_value(env.value)
+	not is_allowed_key_name(env.name)
+	is_not_file_path(env.value)
+	paths := [
+		sprintf("spec.template.spec.initContainers[%v].env[%v].name", [i, j]),
+		sprintf("spec.template.spec.initContainers[%v].env[%v].value", [i, j]),
+	]
+	msga := {
+		"alertMessage": sprintf("%v: %v has sensitive information in initContainer environment variables", [wl.kind, wl.metadata.name]),
+		"alertScore": 9,
+		"fixPaths": [],
+		"deletePaths": paths,
+		"failedPaths": paths,
+		"packagename": "armo_builtins",
+		"alertObject": {"k8sApiObjects": [wl]},
+	}
+}
+
+deny contains msga if {
+	sensitive_key_names := data.postureControlInputs.sensitiveKeyNames
+	wl := input[_]
+	wl.kind == "CronJob"
+	key_name := sensitive_key_names[_]
+	container := wl.spec.jobTemplate.spec.template.spec.initContainers[i]
+	env := container.env[j]
+	contains(lower(env.name), lower(key_name))
+	env.value != ""
+	not is_allowed_value(env.value)
+	not is_allowed_key_name(env.name)
+	is_not_file_path(env.value)
+	paths := [
+		sprintf("spec.jobTemplate.spec.template.spec.initContainers[%v].env[%v].name", [i, j]),
+		sprintf("spec.jobTemplate.spec.template.spec.initContainers[%v].env[%v].value", [i, j]),
+	]
+	msga := {
+		"alertMessage": sprintf("Cronjob: %v has sensitive information in initContainer environment variables", [wl.metadata.name]),
+		"alertScore": 9,
+		"fixPaths": [],
+		"deletePaths": paths,
+		"failedPaths": paths,
+		"packagename": "armo_builtins",
+		"alertObject": {"k8sApiObjects": [wl]},
+	}
 }
 
 is_allowed_value(value) if {
