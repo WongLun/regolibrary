@@ -10,8 +10,7 @@ deny contains msg if {
 	container_sets := [{"name": "containers", "items": object.get(pod_spec, "containers", [])}, {"name": "initContainers", "items": object.get(pod_spec, "initContainers", [])}]
 	container_set := container_sets[_]
 	container := container_set.items[i]
-	limits := object.get(object.get(container, "resources", {}), "limits", {})
-	missing := [resource | resource := ["cpu", "memory"][_]; object.get(limits, resource, "") == ""]
+	missing := [resource | resource := ["cpu", "memory"][_]; object.get(container, ["resources", "limits", resource], "") == ""]
 	count(missing) > 0
 	path := sprintf("spec.podTemplate.spec.%s[%d].resources.limits", [container_set.name, i])
 	msg := agent_limit_message(wl, container, missing, path)

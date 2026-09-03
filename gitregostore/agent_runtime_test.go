@@ -113,3 +113,45 @@ func TestAgentRuntimeMissingInputs(t *testing.T) {
 		})
 	}
 }
+
+// File scans retain explicit nulls in optional resource fields. They must report
+// missing limits just as they do when those fields are omitted.
+func TestAgentRuntimeNullResourceSettings(t *testing.T) {
+	deps := resources.RegoDependenciesData{PostureControlInputs: map[string][]string{
+		"cpu_limit_max": {"1"}, "memory_limit_max": {"1Gi"},
+	}}
+	store, err := deps.TOStorage()
+	require.NoError(t, err)
+	for _, kind := range []string{"WorkerPool", "Sandbox", "SandboxTemplate"} {
+		name := "agent-sandbox-container-limits"
+		settings := []string{`{"resources":null}`, `{"resources":{"limits":null}}`}
+		want := []string{"spec.podTemplate.spec.containers[0].resources.limits"}
+		if kind == "WorkerPool" {
+			name = "worker-pod-resource-ceilings"
+			settings = append(settings, `null`)
+			want = []string{"spec.template.resources.limits.cpu", "spec.template.resources.limits.memory"}
+		}
+		module, err := os.ReadFile(filepath.Join("..", "rules", name, "raw.rego"))
+		require.NoError(t, err)
+		for _, setting := range settings {
+			t.Run(kind+"/"+setting, func(t *testing.T) {
+				spec := `{"replicas":1,"workerImage":"worker","template":` + setting + `}`
+				if kind != "WorkerPool" {
+					spec = `{"podTemplate":{"spec":{"containers":[{"name":"agent","image":"agent",` + setting[1:] + `]}}}`
+				}
+				var input interface{}
+				require.NoError(t, json.Unmarshal([]byte(`[{"kind":"`+kind+`","metadata":{"name":"null-resources"},"spec":`+spec+`}]`), &input))
+				result, err := rego.New(rego.Query("data.armo_builtins.deny"), rego.Module(name, string(module)), rego.Input(input), rego.Store(store)).Eval(context.Background())
+				require.NoError(t, err)
+				require.Len(t, result, 1)
+				var paths []string
+				for _, finding := range result[0].Expressions[0].Value.([]interface{}) {
+					for _, path := range finding.(map[string]interface{})["failedPaths"].([]interface{}) {
+						paths = append(paths, path.(string))
+					}
+				}
+				require.ElementsMatch(t, want, paths)
+			})
+		}
+	}
+}

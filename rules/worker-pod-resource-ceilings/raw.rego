@@ -8,7 +8,7 @@ deny contains msg if {
 	count(maxima) > 0
 	wl := input[_]
 	wl.kind == "WorkerPool"
-	limit := object.get(object.get(object.get(object.get(wl.spec, "template", {}), "resources", {}), "limits", {}), "cpu", "")
+	limit := object.get(wl, ["spec", "template", "resources", "limits", "cpu"], "")
 	worker_cpu_limit_invalid(limit, maxima[_])
 	msg := worker_ceiling_message(wl, "spec.template.resources.limits.cpu", "CPU")
 }
@@ -18,7 +18,7 @@ deny contains msg if {
 	count(maxima) > 0
 	wl := input[_]
 	wl.kind == "WorkerPool"
-	limit := object.get(object.get(object.get(object.get(wl.spec, "template", {}), "resources", {}), "limits", {}), "memory", "")
+	limit := object.get(wl, ["spec", "template", "resources", "limits", "memory"], "")
 	worker_memory_limit_invalid(limit, maxima[_])
 	msg := worker_ceiling_message(wl, "spec.template.resources.limits.memory", "memory")
 }
