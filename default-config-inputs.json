@@ -9,6 +9,7 @@
     "settings": {
         "postureControlInputs": {
             "imageRepositoryAllowList": [],
+            "agentSandboxEgressMode": ["managed"],
             "imageDigestExemptRepositories": [],
             "floatingImageTags": [],
             "trustedCosignPublicKeys": [],

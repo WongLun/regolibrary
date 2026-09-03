@@ -1,0 +1,8 @@
+{
+    "postureControlInputs": {
+        "hardenedSandboxRuntimeClasses": [
+            "gvisor",
+            "kata"
+        ]
+    }
+}

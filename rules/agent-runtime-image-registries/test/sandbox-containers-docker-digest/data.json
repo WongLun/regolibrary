@@ -1,0 +1,8 @@
+{
+    "postureControlInputs": {
+        "imageRepositoryAllowList": [
+            "gcr.io",
+            "docker.io"
+        ]
+    }
+}

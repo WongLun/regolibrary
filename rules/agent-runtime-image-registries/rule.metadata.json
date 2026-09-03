@@ -1,0 +1,56 @@
+{
+    "name": "agent-runtime-image-registries",
+    "attributes": {},
+    "ruleLanguage": "Rego",
+    "match": [
+        {
+            "apiGroups": [
+                "agents.x-k8s.io"
+            ],
+            "apiVersions": [
+                "v1alpha1",
+                "v1beta1"
+            ],
+            "resources": [
+                "Sandbox"
+            ]
+        },
+        {
+            "apiGroups": [
+                "extensions.agents.x-k8s.io"
+            ],
+            "apiVersions": [
+                "v1alpha1",
+                "v1beta1"
+            ],
+            "resources": [
+                "SandboxTemplate"
+            ]
+        },
+        {
+            "apiGroups": [
+                "ate.dev"
+            ],
+            "apiVersions": [
+                "v1alpha1"
+            ],
+            "resources": [
+                "WorkerPool"
+            ]
+        }
+    ],
+    "ruleDependencies": [],
+    "description": "Checks Sandbox, SandboxTemplate and WorkerPool image registries against imageRepositoryAllowList.",
+    "remediation": "Use a registry listed in imageRepositoryAllowList.",
+    "ruleQuery": "armo_builtins",
+    "configInputs": [
+        "settings.postureControlInputs.imageRepositoryAllowList"
+    ],
+    "controlConfigInputs": [
+        {
+            "path": "settings.postureControlInputs.imageRepositoryAllowList",
+            "name": "imageRepositoryAllowList",
+            "description": "Configuration for agent-runtime-image-registries; an empty list disables this check."
+        }
+    ]
+}

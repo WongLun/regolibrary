@@ -1,0 +1,46 @@
+{
+    "name": "agent-runtime-image-digests",
+    "attributes": {},
+    "ruleLanguage": "Rego",
+    "match": [
+        {
+            "apiGroups": [
+                "agents.x-k8s.io"
+            ],
+            "apiVersions": [
+                "v1alpha1",
+                "v1beta1"
+            ],
+            "resources": [
+                "Sandbox"
+            ]
+        },
+        {
+            "apiGroups": [
+                "extensions.agents.x-k8s.io"
+            ],
+            "apiVersions": [
+                "v1alpha1",
+                "v1beta1"
+            ],
+            "resources": [
+                "SandboxTemplate"
+            ]
+        },
+        {
+            "apiGroups": [
+                "ate.dev"
+            ],
+            "apiVersions": [
+                "v1alpha1"
+            ],
+            "resources": [
+                "WorkerPool"
+            ]
+        }
+    ],
+    "ruleDependencies": [],
+    "description": "Requires exact lowercase SHA-256 image pins on Sandbox, SandboxTemplate and WorkerPool resources.",
+    "remediation": "Use image@sha256:<64 lowercase or uppercase hexadecimal characters>.",
+    "ruleQuery": "armo_builtins"
+}

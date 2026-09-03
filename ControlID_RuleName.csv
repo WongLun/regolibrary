@@ -236,3 +236,11 @@ C-0304,agent-sandbox-image-registry-allowlist
 C-0304,agent-sandbox-image-tag-provenance
 C-0307,non-existent-service-account
 C-0309,agent-sandbox-service-account-token
+C-0311,agent-sandbox-container-limits
+C-0312,agent-runtime-image-digests
+C-0313,agent-runtime-image-registries
+C-0314,agent-sandbox-managed-networking
+C-0315,agent-sandbox-strict-egress
+C-0316,agent-sandbox-claim-overrides
+C-0317,worker-pod-resource-ceilings
+C-0297,agent-sandbox-hardened-runtime-class

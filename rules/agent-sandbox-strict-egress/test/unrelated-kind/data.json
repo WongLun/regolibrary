@@ -1,0 +1,16 @@
+{
+    "postureControlInputs": {
+        "imageRepositoryAllowList": [
+            "example.com"
+        ],
+        "hardenedSandboxRuntimeClasses": [
+            "gvisor"
+        ],
+        "agentSandboxEgressMode": [
+            "strict"
+        ],
+        "cpu_limit_max": [
+            "1"
+        ]
+    }
+}

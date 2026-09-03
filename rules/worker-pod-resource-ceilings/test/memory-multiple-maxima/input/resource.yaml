@@ -1,0 +1,12 @@
+apiVersion: ate.dev/v1alpha1
+kind: WorkerPool
+metadata:
+  name: memory-multiple-maxima
+spec:
+  replicas: 1
+  workerImage: gcr.io/team/worker@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  template:
+    resources:
+      limits:
+        cpu: '1'
+        memory: 1Gi

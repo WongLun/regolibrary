@@ -1,0 +1,11 @@
+apiVersion: ate.dev/v1alpha1
+kind: WorkerPool
+metadata:
+  name: memory-missing
+spec:
+  replicas: 1
+  workerImage: gcr.io/team/worker@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  template:
+    resources:
+      limits:
+        cpu: '1'

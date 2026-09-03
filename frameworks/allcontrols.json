@@ -1705,6 +1705,48 @@
             "patch": {
                 "name": "Agent Sandbox service account token isolation"
             }
+        },
+        {
+            "controlID": "C-0311",
+            "patch": {
+                "name": "Agent Sandbox container resource limits"
+            }
+        },
+        {
+            "controlID": "C-0312",
+            "patch": {
+                "name": "Agent runtime image digest pinning"
+            }
+        },
+        {
+            "controlID": "C-0313",
+            "patch": {
+                "name": "Agent runtime image registries"
+            }
+        },
+        {
+            "controlID": "C-0314",
+            "patch": {
+                "name": "Agent Sandbox managed network policy"
+            }
+        },
+        {
+            "controlID": "C-0315",
+            "patch": {
+                "name": "Agent Sandbox strict egress policy"
+            }
+        },
+        {
+            "controlID": "C-0316",
+            "patch": {
+                "name": "Agent Sandbox claim override restrictions"
+            }
+        },
+        {
+            "controlID": "C-0317",
+            "patch": {
+                "name": "Agent Substrate Worker Pod resource ceilings"
+            }
         }
     ]
 }

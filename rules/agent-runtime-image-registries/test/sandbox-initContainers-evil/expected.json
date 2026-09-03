@@ -1,0 +1,22 @@
+[
+    {
+        "alertMessage": "Sandbox image uses a registry outside imageRepositoryAllowList",
+        "alertObject": {
+            "k8sApiObjects": [
+                {
+                    "apiVersion": "agents.x-k8s.io/v1beta1",
+                    "kind": "Sandbox",
+                    "metadata": {
+                        "name": "sandbox-initContainers-evil"
+                    }
+                }
+            ]
+        },
+        "alertScore": 8,
+        "failedPaths": [
+            "spec.podTemplate.spec.initContainers[0].image"
+        ],
+        "fixPaths": [],
+        "packagename": "armo_builtins"
+    }
+]

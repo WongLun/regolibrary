@@ -297,3 +297,20 @@ AllControls,C-0304,Agent Sandbox image provenance
 AllControls,C-0307,Non-existent service account
 DevOpsBest,C-0307,Non-existent service account
 AllControls,C-0309,Agent Sandbox service account token isolation
+AgentRuntimeHardening,C-0297,Agent Sandbox hardened runtime class
+AgentRuntimeHardening,C-0309,Agent Sandbox service account token isolation
+AgentRuntimeHardening,C-0311,Agent Sandbox container resource limits
+AgentRuntimeHardening,C-0312,Agent runtime image digest pinning
+AgentRuntimeHardening,C-0313,Agent runtime image registries
+AgentRuntimeHardening,C-0314,Agent Sandbox managed network policy
+AgentRuntimeHardening,C-0315,Agent Sandbox strict egress policy
+AgentRuntimeHardening,C-0316,Agent Sandbox claim override restrictions
+AgentRuntimeHardening,C-0317,Agent Substrate Worker Pod resource ceilings
+AllControls,C-0311,Agent Sandbox container resource limits
+AllControls,C-0312,Agent runtime image digest pinning
+AllControls,C-0313,Agent runtime image registries
+AllControls,C-0314,Agent Sandbox managed network policy
+AllControls,C-0315,Agent Sandbox strict egress policy
+AllControls,C-0316,Agent Sandbox claim override restrictions
+AllControls,C-0317,Agent Substrate Worker Pod resource ceilings
+AllControls,C-0297,Agent Sandbox hardened runtime class
