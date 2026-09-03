@@ -1,0 +1,22 @@
+apiVersion: agents.x-k8s.io/v1beta1
+kind: Sandbox
+metadata:
+  name: sandbox-initContainers-evil
+spec:
+  podTemplate:
+    spec:
+      runtimeClassName: gvisor
+      containers:
+      - name: actor
+        image: gcr.io/team/actor@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        resources:
+          limits:
+            cpu: '1'
+            memory: 256Mi
+      initContainers:
+      - name: actor
+        image: gcr.io.evil/actor
+        resources:
+          limits:
+            cpu: '1'
+            memory: 256Mi

@@ -1,0 +1,12 @@
+apiVersion: ate.dev/v1alpha1
+kind: WorkerPool
+metadata:
+  name: worker-port
+spec:
+  replicas: 1
+  workerImage: registry:5000/nginx
+  template:
+    resources:
+      limits:
+        cpu: '1'
+        memory: 256Mi

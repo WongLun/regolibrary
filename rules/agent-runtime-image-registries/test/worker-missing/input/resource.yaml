@@ -1,0 +1,12 @@
+apiVersion: ate.dev/v1alpha1
+kind: WorkerPool
+metadata:
+  name: worker-missing
+spec:
+  replicas: 1
+  workerImage: evil.example/worker
+  template:
+    resources:
+      limits:
+        cpu: '1'
+        memory: 256Mi

@@ -6,7 +6,7 @@ import rego.v1
 deny contains msg if {
 	wl := input[_]
 	image_ref := agent_digest_image_refs(wl)[_]
-	not regex.match(`^.+@sha256:[A-Fa-f0-9]{64}$`, image_ref.image)
+	not regex.match(`^.+@sha256:[a-f0-9]{64}$`, image_ref.image)
 	msg := agent_digest_message(wl, image_ref.path)
 }
 
@@ -15,11 +15,6 @@ agent_digest_image_refs(wl) := [ref | some i; some set in [{"name": "containers"
 	pod_spec := object.get(object.get(wl.spec, "podTemplate", {}), "spec", {})
 }
 
-agent_digest_image_refs(wl) := [{"image": wl.spec.ateomImage, "path": "spec.ateomImage"}] if wl.kind == "WorkerPool"
-
-agent_digest_image_refs(wl) := array.concat([{"image": wl.spec.pauseImage, "path": "spec.pauseImage"}], container_refs) if {
-	wl.kind == "ActorTemplate"
-	container_refs := [ref | c := object.get(wl.spec, "containers", [])[i]; ref := {"image": c.image, "path": sprintf("spec.containers[%d].image", [i])}]
-}
+agent_digest_image_refs(wl) := [{"image": wl.spec.workerImage, "path": "spec.workerImage"}] if wl.kind == "WorkerPool"
 
 agent_digest_message(wl, path) := {"alertMessage": sprintf("%v image must be pinned to an exact SHA-256 digest", [wl.kind]), "packagename": "armo_builtins", "failedPaths": [path], "fixPaths": [], "alertScore": 8, "alertObject": {"k8sApiObjects": [wl]}}

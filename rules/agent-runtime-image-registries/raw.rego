@@ -17,12 +17,7 @@ agent_registry_image_refs(wl) := [ref | some i; some set in [{"name": "container
 	pod_spec := object.get(object.get(wl.spec, "podTemplate", {}), "spec", {})
 }
 
-agent_registry_image_refs(wl) := [{"image": wl.spec.ateomImage, "path": "spec.ateomImage"}] if wl.kind == "WorkerPool"
-
-agent_registry_image_refs(wl) := array.concat([{"image": wl.spec.pauseImage, "path": "spec.pauseImage"}], container_refs) if {
-	wl.kind == "ActorTemplate"
-	container_refs := [ref | c := object.get(wl.spec, "containers", [])[i]; ref := {"image": c.image, "path": sprintf("spec.containers[%d].image", [i])}]
-}
+agent_registry_image_refs(wl) := [{"image": wl.spec.workerImage, "path": "spec.workerImage"}] if wl.kind == "WorkerPool"
 
 agent_registry_allowed(image, allowed) if {
 	registry := allowed[_]
@@ -31,10 +26,17 @@ agent_registry_allowed(image, allowed) if {
 
 agent_registry_allowed(image, allowed) if {
 	"docker.io" in allowed
-	first := split(image, "/")[0]
+	parts := split(image, "/")
+	count(parts) > 1
+	first := parts[0]
 	not contains(first, ".")
 	not contains(first, ":")
 	first != "localhost"
+}
+
+agent_registry_allowed(image, allowed) if {
+	"docker.io" in allowed
+	count(split(image, "/")) == 1
 }
 
 agent_registry_message(wl, path) := {"alertMessage": sprintf("%v image uses a registry outside imageRepositoryAllowList", [wl.kind]), "packagename": "armo_builtins", "failedPaths": [path], "fixPaths": [], "alertScore": 8, "alertObject": {"k8sApiObjects": [wl]}}

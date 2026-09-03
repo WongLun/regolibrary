@@ -1707,12 +1707,6 @@
             }
         },
         {
-            "controlID": "C-0310",
-            "patch": {
-                "name": "Agent Sandbox runtime isolation"
-            }
-        },
-        {
             "controlID": "C-0311",
             "patch": {
                 "name": "Agent Sandbox container resource limits"
@@ -1752,18 +1746,6 @@
             "controlID": "C-0317",
             "patch": {
                 "name": "Agent Substrate Worker Pod resource ceilings"
-            }
-        },
-        {
-            "controlID": "C-0318",
-            "patch": {
-                "name": "ActorTemplate snapshot secret references"
-            }
-        },
-        {
-            "controlID": "C-0319",
-            "patch": {
-                "name": "Actor snapshot location allowlist"
             }
         }
     ]

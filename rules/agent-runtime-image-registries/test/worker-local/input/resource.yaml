@@ -1,0 +1,12 @@
+apiVersion: ate.dev/v1alpha1
+kind: WorkerPool
+metadata:
+  name: worker-local
+spec:
+  replicas: 1
+  workerImage: localhost/nginx
+  template:
+    resources:
+      limits:
+        cpu: '1'
+        memory: 256Mi

@@ -9,9 +9,7 @@
     "settings": {
         "postureControlInputs": {
             "imageRepositoryAllowList": [],
-            "agentRuntimeClassAllowList": ["gvisor", "kata"],
             "agentSandboxEgressMode": ["managed"],
-            "agentSnapshotLocationAllowList": [],
             "imageDigestExemptRepositories": [],
             "floatingImageTags": [],
             "trustedCosignPublicKeys": [],

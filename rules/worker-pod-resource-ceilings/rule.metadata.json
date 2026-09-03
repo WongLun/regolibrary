@@ -1,1 +1,38 @@
-{"name":"worker-pod-resource-ceilings","attributes":{},"ruleLanguage":"Rego","match":[{"apiGroups":["ate.dev"],"apiVersions":["v1alpha1"],"resources":["WorkerPool"]}],"ruleDependencies":[],"description":"checks Worker Pod resource limits against configured ceilings","remediation":"Set WorkerPool spec.template.resources.limits within configured maxima.","ruleQuery":"armo_builtins"}
+{
+    "name": "worker-pod-resource-ceilings",
+    "attributes": {},
+    "ruleLanguage": "Rego",
+    "match": [
+        {
+            "apiGroups": [
+                "ate.dev"
+            ],
+            "apiVersions": [
+                "v1alpha1"
+            ],
+            "resources": [
+                "WorkerPool"
+            ]
+        }
+    ],
+    "ruleDependencies": [],
+    "description": "checks Worker Pod resource limits against configured ceilings",
+    "remediation": "Set WorkerPool spec.template.resources.limits within configured maxima.",
+    "ruleQuery": "armo_builtins",
+    "configInputs": [
+        "settings.postureControlInputs.cpu_limit_max",
+        "settings.postureControlInputs.memory_limit_max"
+    ],
+    "controlConfigInputs": [
+        {
+            "path": "settings.postureControlInputs.cpu_limit_max",
+            "name": "cpu_limit_max",
+            "description": "Configuration for worker-pod-resource-ceilings; an empty list disables this check."
+        },
+        {
+            "path": "settings.postureControlInputs.memory_limit_max",
+            "name": "memory_limit_max",
+            "description": "Configuration for worker-pod-resource-ceilings; an empty list disables this check."
+        }
+    ]
+}

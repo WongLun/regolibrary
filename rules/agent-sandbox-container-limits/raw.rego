@@ -5,6 +5,7 @@ import rego.v1
 
 deny contains msg if {
 	wl := input[_]
+	wl.kind in {"Sandbox", "SandboxTemplate"}
 	pod_spec := object.get(object.get(wl.spec, "podTemplate", {}), "spec", {})
 	container_sets := [{"name": "containers", "items": object.get(pod_spec, "containers", [])}, {"name": "initContainers", "items": object.get(pod_spec, "initContainers", [])}]
 	container_set := container_sets[_]
